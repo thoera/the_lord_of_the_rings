@@ -62,7 +62,7 @@ plt.tick_params(
     which="both",  # Both major and minor ticks are affected.
     top="off",     # Ticks along the top edge are off.
     bottom="off",  # Ticks along the bottom edge are off.
-    right="off")   # Ticks along the top edge are off.
+    right="off")   # Ticks along the right edge are off.
 
 # Add labels.
 plt.xlabel("")
@@ -102,7 +102,7 @@ plt.tick_params(
     which="both",  # Both major and minor ticks are affected.
     top="off",     # Ticks along the top edge are off.
     bottom="off",  # Ticks along the bottom edge are off.
-    right="off")   # Ticks along the top edge are off.
+    right="off")   # Ticks along the right edge are off.
 
 # Add labels.
 plt.xlabel("")
