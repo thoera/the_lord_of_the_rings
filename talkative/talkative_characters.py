@@ -93,7 +93,7 @@ f = plt.figure()
 
 # Plot.    
 ax = top_20_by_movie.ix[:, 0:3].plot(kind="bar", stacked=True, 
-                                     colors=["#e24a33", "#348abd", "#988ed5"], 
+                                     color=["#e24a33", "#348abd", "#988ed5"], 
                                      figsize=(15, 10), ax=f.gca())
 
 # Remove tick lines in x and y axes.
