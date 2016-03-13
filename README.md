@@ -172,17 +172,79 @@ Le graphique suivant présente les vingt personnages ayant le plus de dialogues 
 
 [![talkative](/plots/talkative.png?raw=true)](/plots/talkative.pdf)
 
-Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**, **Sam** et **Aragorn**.
+Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**.
 
 Il est également possible de visualiser la répartition de chacun des trois films dans ce total ce qui permet de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" de personnages comme **Galadriel** ou **Bilbo** au fil de l'histoire.
 
 [![talkative_by_movie](/plots/talkative_by_movie.png?raw=true)](/plots/talkative_by_movie.pdf)
 
-## *Text mining* et matrices d'adjacence 
+## *Text mining* et matrice d'adjacence 
 
 Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle choisie ici consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire entre les personnages.
 
-Cette technique nécessite notamment d'effectuer une analyse sémantique et de construire une matrice de type termes-documents. Deux bibliothèques en particulier permettent de grandement faciliter ces opérations : le `Natural Language Toolkit` (ou `nltk` de son petit nom) et le module Feature Extraction de `Scikit-Learn`.
+Cette technique nécessite notamment d'effectuer une analyse sémantique et de construire une matrice de type termes-documents. Deux bibliothèques en particulier permettent de faciliter grandement ces opérations : le `Natural Language Toolkit` (ou `nltk` de son petit nom) et le module `Feature Extraction` de `Scikit-Learn`.
+
+Les opérations de *text mining* consistent essentiellement à convertir l'ensemble des caractères en bas-de-casse, à supprimer des dialogues chiffres et signes de ponctuation, à éliminer les mots vides (ou *stop words*, en anglais) qui correspondent aux mots extrêmement communs et enfin, à supprimer les espaces supplémentaires.
+
+```Python
+## Clean the dialogues.
+
+# Convert the dialogues to lowercase.
+dials_per_character["Dialogue"] = dials_per_character["Dialogue"].str.lower()
+
+# Remove numbers and ponctuation.
+dials_per_character["Dialogue"] = dials_per_character["Dialogue"]\
+.str.replace("[^a-z\s]", " ")
+
+# Remove stop words (words which are filtered out).
+for word in stopwords.words("english"):
+    dials_per_character["Dialogue"] = dials_per_character["Dialogue"]\
+    .str.replace("".join(["\\b", word, "\\b"]), "")
+
+# Replace extra whitespaces (two or more).
+dials_per_character["Dialogue"] = dials_per_character["Dialogue"]\
+.str.replace("(  +)", " ")
+```
+
+On peut alors créer une matrice de type termes-documents où les termes sont l'ensemble des mots utilisés et les documents, les personnages.
+
+```Python
+# Create a document-term matrix.
+vectorizer = CountVectorizer()
+doc_term_matrix = vectorizer.fit_transform(dials_per_character["Dialogue"])
+
+# Convert it to a data frame.
+doc_term_matrix = pd.DataFrame(doc_term_matrix.toarray(), 
+                  columns = vectorizer.get_feature_names(),
+                  index = dials_per_character.index)
+
+# Get word count.
+count_terms = doc_term_matrix.sum(axis=0).sort_values(ascending=False)
+```
+
+Ce format de matrice permet de facilement compter le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente la distribution obtenue.
+
+[![histogram_words](/plots/histogram_words.png?raw=true)](/plots/histogram_words.pdf)
+
+La très grande majorité des mots employés apparaissent moins d'une dizaine de fois. Afin de simplifier l'analyse, ne sont conservés pour la suite que les mots dont la fréquence est supérieur au 9e décile (i.e. 9 occurences).
+
+```Python
+# A lot of words are used just a few times.
+# To make things a little bit easier: keep only words >= 90% quantile frequency.
+count_terms.quantile(q=0.9)
+
+frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
+```
+
+[![histogram_top_words](/plots/histogram_top_words.png?raw=true)](/plots/histogram_top_words.pdf)
+
+[![barplot_top_30_words](/plots/barplot_top_30_words.png?raw=true)](/plots/barplot_top_30_words.pdf)
+
+[![heatmap_seaborn](/plots/heatmap_seaborn.png?raw=true)](/plots/heatmap_seaborn.pdf)
+
+[![heatmap_2_seaborn](/plots/heatmap_2_seaborn.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
+
+[![network_white](/plots/network_white.png?raw=true)](/plots/network_white.pdf)
 
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
