@@ -128,6 +128,57 @@ GALADRIEL|One Ring to rule them all...
 
 ## Les personnages les plus bavards
 
-Une fois les scripts rendus utilisables, il est alors possible de déterminer quels sont les personnages les plus bavards de la trilogie.
+Une fois les scripts rendus utilisables, il est alors possible de déterminer quels sont les personnages les plus bavards de la trilogie. Ceci peut notamment être fait en utilisant la fonction `value_counts()` de la bibliothèque `pandas` après avoir concaténé les trois scripts nettoyés.
+
+```Python
+# Import the dialogues text files.
+movie_1 = pd.read_table(r"dialogues_the-fellowship-of-the-ring.txt",
+                        sep="|", header=0)
+
+movie_2 = pd.read_table(r"dialogues_the-two-towers.txt",
+                        sep="|", header=0)
+
+movie_3 = pd.read_table(r"dialogues_the-return-of-the-king.txt",
+                        sep="|", header=0)
+
+# Concatenate the names of the characters in the three movies.
+characters = pd.concat([movie_1["Character"], movie_2["Character"], 
+                        movie_3["Character"]])
+
+# Remove unwanted trailing whitespaces.
+characters = characters.str.rstrip()
+
+# Replace some characters names to standardize them.
+characters = characters.replace({"DEAGOL":"DÉAGOL", "EOMER":"ÉOMER", 
+                                 "EOWYN":"ÉOWYN", "EÓWYN":"ÉOWYN", 
+                                 "SMEAGOL":"SMÉAGOL", "THEODEN":"THÉODEN",
+                                 "WITCH-KING":"WITCH KING"})
+
+# Convert "characters" to a data frame.
+characters = pd.DataFrame(characters)
+
+# Reset the index.
+characters = characters.reset_index(drop=True)
+
+# Add the movie number: 1, 2 or 3.
+characters["movie_number"] = np.repeat([1, 2, 3], [len(movie_1),
+                                                   len(movie_2), len(movie_3)])
+
+# Get the top 20 most talkative characters.
+top_20 = pd.value_counts(characters["Character"]).head(n=20)
+```
+
+Le graphique suivant présente les vingt personnages ayant le plus de dialogues sur l'ensemble de la trilogie.
+
+[![talkative](/plots/talkative.png?raw=true)](/plots/talkative.pdf)
+
+Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**, **Sam** et **Aragorn**.
+
+Il est également possible de visualiser la répartition de chacun des trois films dans ce total.
+
+[![talkative_by_movie](/plots/talkative_by_movie.png?raw=true)](/plots/talkative_by_movie.pdf)
+
+On peut ainsi remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" de personnages comme **Galadriel** ou **Bilbo** au fil de l'histoire.
+
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
