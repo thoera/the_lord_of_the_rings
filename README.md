@@ -1,3 +1,6 @@
+![header](the_lord_of_the_rings_by_riku_rocks.jpg?raw=true)
+
+
 <br>
 
 Ce (modeste) projet à deux objectifs : d'une part, faire un peu de *text mining* avec Python et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière informative (et dans la mesure du possible esthétique et plaisante) les résultats de l'analyse textuelle préalable.
