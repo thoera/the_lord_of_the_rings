@@ -13,7 +13,7 @@ Dans l'ordre, les différentes étapes permettant la représentation graphique f
 * construire un réseau (basé sur la proximité du vocabulaire utilisé) entre les personnages ; 
 * représenter graphiquement le réseau obtenu.
 
-## Les scripts des trois films
+## Les scripts
 
 Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient uniformisés et directement utilisables pour une analyse quelconque.
 
@@ -174,11 +174,15 @@ Le graphique suivant présente les vingt personnages ayant le plus de dialogues 
 
 Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**, **Sam** et **Aragorn**.
 
-Il est également possible de visualiser la répartition de chacun des trois films dans ce total.
+Il est également possible de visualiser la répartition de chacun des trois films dans ce total ce qui permet de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" de personnages comme **Galadriel** ou **Bilbo** au fil de l'histoire.
 
 [![talkative_by_movie](/plots/talkative_by_movie.png?raw=true)](/plots/talkative_by_movie.pdf)
 
-On peut ainsi remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" de personnages comme **Galadriel** ou **Bilbo** au fil de l'histoire.
+## *Text mining* et matrices d'adjacence 
+
+Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle choisie ici consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire entre les personnages.
+
+Cette technique nécessite notamment d'effectuer une analyse sémantique et de construire une matrice de type termes-documents. Deux bibliothèques en particulier permettent de grandement faciliter ces opérations : le `Natural Language Toolkit` (ou `nltk` de son petit nom) et le module Feature Extraction de `Scikit-Learn`.
 
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
