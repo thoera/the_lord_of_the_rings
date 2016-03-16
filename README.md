@@ -2,7 +2,7 @@
 
 <br>
 
-Ce (modeste) projet à deux objectifs : d'une part, faire un peu de *text mining* avec Python et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière informative (et dans la mesure du possible esthétique et plaisante) les résultats de l'analyse textuelle préalable.
+Ce (modeste) projet à deux objectifs : d'une part, faire un peu de *text mining* avec Python et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière un minimum informative (et dans la mesure du possible esthétique, plaisante et rigolote !) les résultats de l'analyse textuelle préalable.
 
 L'article [*Star Wars* de Gaston Sanchez](http://gastonsanchez.com/got-plot/crunching-data/2013/02/03/Star-Wars-Arc-Diagram/) est la source principale d'inspiration de ce projet. En passant, j'encourage fortement la lecture de son site !
 
@@ -244,7 +244,8 @@ frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
 
 [![heatmap_2_seaborn](/plots/heatmap_2_seaborn.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
 
-[![network_white](/plots/network_white.png?raw=true)](/plots/network_white.pdf)
+[![network_white](/plots/network_white_900.png?raw=true)](/plots/network_white.pdf)
 
+[![network_white_lego](/plots/network_white_lego_900.png?raw=true)](/plots/network_white.pdf)
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
