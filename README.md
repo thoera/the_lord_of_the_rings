@@ -15,7 +15,7 @@ L'article [*Star Wars* de Gaston Sanchez](http://gastonsanchez.com/got-plot/crun
 
 ## Les scripts
 
-Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient directement utilisables pour une analyse quelconque.
+Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient directement utilisables pour une analyse textuelle quelconque.
 
 Pour exemple, voici les premières lignes de *The Fellowship of the Ring* :
 
@@ -218,9 +218,51 @@ count_terms.quantile(q=0.9)
 frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
 ```
 
+Voici la nouvelle distribution obtenue suite à cette étape de sélection drastique.
+
 [![histogram_top_words](/plots/histogram_top_words.png?raw=true)](/plots/histogram_top_words.pdf)
 
+Si la très grande majorité des mots apparaissent moins d'une vingtaine de fois (preuve d'une certaine richesse de vocabulaire), quelques uns sont par contre utilisés plus de cent fois.
+
+Les trente mots les plus utilisés sont les suivants :
+
 [![barplot_top_30_words](/plots/barplot_top_30_words.png?raw=true)](/plots/barplot_top_30_words.pdf)
+
+On y retrouve des noms de personnages comme Frodo (de loin le mot le plus utilisé avec 179 répétitions), Gandalf, Aragorn ou encore Sauron, des verbes (aller, venir, savoir, etc.) et des mots emblématique de l'œuvre de J. R. R. Tolkien comme *anneau*, *unique*, *seigneur*, etc.
+
+L'étape suivante consiste à construire une matrice d'adjacence permettant de quantifier la proximité entre les différents personnages. 
+Le code suivant permet de construire deux matrices d'adjacence : la première est calculée comme le produit matriciel XX' et la seconde est basée sur l'[indice de Jaccard](https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance).
+
+```Python
+## Adjacency matrix based on the most frequent words.
+"""
+We use two different methods. We get the same network between the characters 
+with both adjacency matrices but with different weights.
+"""
+
+# Filter only the most frequent words.
+doc_term_freq = doc_term_matrix[frequent_words.index]
+
+# 1st method.
+adj_matrix_1 = np.dot(doc_term_freq, doc_term_freq.T)
+# Fill the diagonal with zeros.
+np.fill_diagonal(adj_matrix_1, val=0)
+# Convert it to a data frame.
+adj_matrix_1 = pd.DataFrame(adj_matrix_1, 
+                            index=doc_term_freq.index,
+                            columns=doc_term_freq.index)
+
+# 2nd method.
+# Create a boolean matrix.
+doc_term_freq_boolean = doc_term_freq.copy()
+doc_term_freq_boolean[doc_term_freq_boolean != 0] = 1
+# Compute the adjacency matrix using jaccard similarity.
+# See: https://en.wikipedia.org/wiki/Jaccard_index
+jaccard_matrix = 1 - pdist(doc_term_freq_boolean, "jaccard")
+adj_matrix_2 = pd.DataFrame(squareform(jaccard_matrix), 
+                            index=doc_term_freq.index, 
+                            columns=doc_term_freq.index)
+```
 
 [![heatmap_seaborn](/plots/heatmap_seaborn.png?raw=true)](/plots/heatmap_seaborn.pdf)
 
