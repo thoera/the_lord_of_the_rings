@@ -160,7 +160,7 @@ Il est également possible de visualiser la répartition de chacun des trois fil
 
 [![talkative_by_movie](/plots/talkative_by_movie_scaled.png?raw=true)](/plots/talkative_by_movie.pdf)
 
-## *Text mining* et matrice d'adjacence 
+## *Text mining* et matrice d'adjacence
 
 Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle ici choisie consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire utilisé par les vingt personnages.
 
@@ -264,11 +264,33 @@ adj_matrix_2 = pd.DataFrame(squareform(jaccard_matrix),
                             columns=doc_term_freq.index)
 ```
 
+Une des façons de visualiser un réseau consiste à créer une *heatmap*. La matrice ci-dessous permet de faire quelques observations. Par exemple, les trois personnages les plus bavards (**Gandalf**, **Frodo** et **Sam**) partagent beaucoup de leur vocabulaire en commun, **Aragorn** apparaît à la fois proche de **Gandalf** et d'**Elrond**, **Éowyn** et **Sméagol** sont les deux personnages qui semblent les plus isolés.
+
 [![heatmap_seaborn](/plots/heatmap_seaborn_scaled.png?raw=true)](/plots/heatmap_seaborn.pdf)
+
+Sur une *heatmap*, ordonner autrement les personnages permet souvent de mettre en évidence des caractéristiques différentes du réseau. Si sur la matrice ci-dessus, les personnages étaient ordonnés du plus bavard au moins bavard, on peut également les ordonner selon leur race : Humains, Hobbits, Elfes, Magiciens et autres (Nain, Ent et **Gollum**/**Sméagol** bien qu'il soit techniquement un hobbit).
 
 [![heatmap_2_seaborn](/plots/heatmap_2_seaborn_scaled.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
 
+Cet ordonnancement différent permet par exemple de voir les liens forts qui peuvent exister entre les Hobbits ou au contraire la faible porximité apparentre entre les Hommes. De même, les liens entre Elfes sont assez distants.
+
+## Visualisation du réseau
+
+La dernière étape de ce projet consiste à visualiser le réseau proprement dit. J'ai choisi d'utiliser `Gephi` bien que les visualisations présentées ci-après aurait pu être réalisées directement avec `igraph` par exemple.
+
+Une fois la matrice d'ajacence créée, il faut transformer celle-ci en un objet de type "graphe", c'est-à-dire en un ensemble de nœuds reliés par des arrêtes. Les relations entre personnages étant symétriques, le graphe ainsi créé est dit non orienté.
+
+Ayant rencontré quelques soucis de compatibilité entre ma version de Python et `igraph`, cette étape a été réalisée en `R` (voir network.R).
+
+Voici le résultat obtenu avec `Gephi` :
+
 [![network_white](/plots/network_white_scaled.png?raw=true)](/plots/network_white.pdf)
+
+J'ai choisi d'attribuer des couleurs aux nœuds en fonction de la race des personnages afin d'essayer d'appréhender les liens intra et inter-races.
+
+Les observations que l'on peut faire sont très semblables à celles effectuées précédemment. Sans réelle surprise, **Gandalf** se trouve au centre du réseau et possède des liens forts avec de nombreux personnages. Les Hobbits semblent très proches les uns des autres (et même de **Gollum**) tandis que les liens entre Elfes ou entre Humains sont plus ténus. **Éowyn** et **Faramir** (qui finiront par se marier) sont tous les deux assez éloignés des autres personnages. Tout comme, dans une moindre mesure, **Legolas**.
+
+Et après la version sérieuse, voici la version plus fun de ce même graphe (le pouvoir associé de `Gimp`, `Gephi` et `Inkscape`) :
 
 [![network_white_lego](/plots/network_white_lego_scaled.png?raw=true)](/plots/network_white_lego.pdf)
 
