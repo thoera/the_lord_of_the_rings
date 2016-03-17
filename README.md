@@ -283,7 +283,7 @@ La dernière étape de ce projet consiste à visualiser le réseau sous forme de
 
 Une fois la matrice d'ajacence créée, il faut transformer celle-ci en un objet de type "graphe", c'est-à-dire en un ensemble de nœuds reliés par des arrêtes. Les relations entre personnages étant ici symétriques, le graphe ainsi créé est dit non orienté.
 
-Ayant rencontré quelques soucis de compatibilité entre ma version de Python et l'implémentation d'`igraph`, cette étape a été réalisée en `R` (voir network.R).
+Ayant rencontré quelques soucis de compatibilité entre ma version de Python et l'implémentation d'`igraph`, cette étape a été réalisée en R.
 
 Voici le résultat obtenu avec `Gephi` :
 
