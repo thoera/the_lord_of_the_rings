@@ -152,13 +152,13 @@ top_20 = pd.value_counts(characters["Character"]).head(n=20)
 
 Le graphique suivant présente les vingt personnages ayant le plus de dialogues sur l'ensemble des trois films (deux versions de ce graphique et des suivants existent : l'une avec `matplotlib` et l'autre avec `seaborn`).
 
-[![talkative](/plots/talkative.png?raw=true)](/plots/talkative.pdf)
+[![talkative](/plots/talkative_scaled.png?raw=true)](/plots/talkative.pdf)
 
 Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**. Notons l'absence remarquée de **Sauron**. Le seul personnage maléfique présent étant **Saruman** (et, selon votre interprétation ou sensibilité, **Gollum** ?).
 
 Il est également possible de visualiser la répartition de chacun des trois films dans ce total. Ceci permet notamment de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" progressive de personnages comme **Galadriel** ou **Bilbo**.
 
-[![talkative_by_movie](/plots/talkative_by_movie.png?raw=true)](/plots/talkative_by_movie.pdf)
+[![talkative_by_movie](/plots/talkative_by_movie_scaled.png?raw=true)](/plots/talkative_by_movie.pdf)
 
 ## *Text mining* et matrice d'adjacence 
 
@@ -206,7 +206,7 @@ count_terms = doc_term_matrix.sum(axis=0).sort_values(ascending=False)
 
 Ce format de matrice permet notamment de compter facilement le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente la distribution obtenue.
 
-[![histogram_words](/plots/histogram_words.png?raw=true)](/plots/histogram_words.pdf)
+[![histogram_words](/plots/histogram_words_scaled.png?raw=true)](/plots/histogram_words.pdf)
 
 La très grande majorité des mots employés apparaissent moins d'une dizaine de fois. Afin de simplifier l'analyse à venir, l'on ne conserve dans la suite que les mots dont la fréquence est supérieur au 9e décile (soit 9 occurences).
 
@@ -220,13 +220,13 @@ frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
 
 Voici la nouvelle distribution obtenue suite à cette étape de sélection drastique.
 
-[![histogram_top_words](/plots/histogram_top_words.png?raw=true)](/plots/histogram_top_words.pdf)
+[![histogram_top_words](/plots/histogram_top_words_scaled.png?raw=true)](/plots/histogram_top_words.pdf)
 
 Si la très grande majorité des mots apparaissent moins d'une vingtaine de fois (preuve d'une certaine richesse de vocabulaire), quelques uns sont par contre utilisés plus de cent fois.
 
 Les trente mots les plus utilisés sont les suivants :
 
-[![barplot_top_30_words](/plots/barplot_top_30_words.png?raw=true)](/plots/barplot_top_30_words.pdf)
+[![barplot_top_30_words](/plots/barplot_top_30_words_scaled.png?raw=true)](/plots/barplot_top_30_words.pdf)
 
 On y retrouve des noms de personnages comme Frodo (de loin le mot le plus utilisé avec 179 répétitions), Gandalf, Aragorn ou encore Sauron, des verbes (aller, venir, savoir, etc.) et des mots emblématique de l'œuvre de J. R. R. Tolkien comme *anneau*, *unique*, *seigneur*, etc.
 
@@ -264,12 +264,12 @@ adj_matrix_2 = pd.DataFrame(squareform(jaccard_matrix),
                             columns=doc_term_freq.index)
 ```
 
-[![heatmap_seaborn](/plots/heatmap_seaborn.png?raw=true)](/plots/heatmap_seaborn.pdf)
+[![heatmap_seaborn](/plots/heatmap_seaborn_scaled.png?raw=true)](/plots/heatmap_seaborn.pdf)
 
-[![heatmap_2_seaborn](/plots/heatmap_2_seaborn.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
+[![heatmap_2_seaborn](/plots/heatmap_2_seaborn_scaled.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
 
-[![network_white](/plots/network_white_900.png?raw=true)](/plots/network_white.pdf)
+[![network_white](/plots/network_white_scaled.png?raw=true)](/plots/network_white.pdf)
 
-[![network_white_lego](/plots/network_white_lego_900.png?raw=true)](/plots/network_white_lego.pdf)
+[![network_white_lego](/plots/network_white_lego_scaled.png?raw=true)](/plots/network_white_lego.pdf)
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
