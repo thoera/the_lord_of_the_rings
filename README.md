@@ -2,20 +2,20 @@
 
 <br>
 
-Ce (modeste) projet à deux objectifs : d'une part, faire un peu de *text mining* avec Python et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière un minimum informative (et dans la mesure du possible esthétique, plaisante et rigolote !) les résultats de l'analyse textuelle préalable.
+Ce projet avait deux objectifs : d'une part, présenter quelques exemples de *text mining* en Python (expressions régulières, matrice documents-termes, etc.) et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière informative/esthétique/plaisante/rigolote les résultats de l'analyse textuelle préalable.
 
-L'article [*Star Wars* de Gaston Sanchez](http://gastonsanchez.com/got-plot/crunching-data/2013/02/03/Star-Wars-Arc-Diagram/) est la source principale d'inspiration de ce projet. En passant, j'encourage fortement la lecture de son site !
-
-En quelques mots, l'objectif de ce projet et la recette utilisée. L'idée principale était de construire un `réseau` (ou `graph`) entre les personnages les plus *bavards* des trois films du *Seigneur des Anneaux*. 
-Dans l'ordre, les différentes étapes permettant la représentation graphique finale sont :
-* récupérer les scripts des films et les "nettoyer" pour les rendre utilisables ;
-* identifier les personnages les plus bavards sur l'ensemble de la trilogie (i.e. ceux avec le plus de dialogues) ;
-* construire un réseau (basé sur la proximité du vocabulaire utilisé) entre les personnages ; 
+L'idée principale était de construire un `réseau` (ou `graph`) entre les personnages les plus *bavards* de la trilogie du *Seigneur des Anneaux*. 
+La "recette" utilisée est la suivante :
+* récupérer les scripts des films et les nettoyer pour les rendre utilisables ;
+* identifier les vingt personnages les plus bavards sur l'ensemble de la trilogie (i.e. ceux avec le plus grand nombre de dialogues) ;
+* construire un réseau basé sur la proximité du vocabulaire utilisé entre les personnages ; 
 * représenter graphiquement le réseau obtenu.
+
+L'article [*Star Wars* de Gaston Sanchez](http://gastonsanchez.com/got-plot/crunching-data/2013/02/03/Star-Wars-Arc-Diagram/) fut la principale source d'inspiration de ce projet. (J'encourage d'ailleurs fortement la lecture de son site !)
 
 ## Les scripts
 
-Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient uniformisés et directement utilisables pour une analyse quelconque.
+Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient directement utilisables pour une analyse quelconque.
 
 Pour exemple, voici les premières lignes de *The Fellowship of the Ring* :
 
@@ -39,27 +39,9 @@ whispering, tinged with SADNESS and REGRET:
           water, I feel it in the earth, I smell it
           in the air...Much that once was is lost,
           for none now live who remember it.
-
-SUPER: THE LORD OF THE RINGS
-
-EXT. PROLOGUE -- DAY
-
-IMAGE: FLICKERING FIRELIGHT. The NOLDORIN FORGE in EREGION.
-MOLTEN GOLD POURS from the lip of an IRON LADLE.
-
-                    GALADRIEL (V.O.)
-          It began with the forging of the Great
-          Rings.
-
-IMAGE: THREE RINGS, each set with a single GEM, are received
-by the HIGH ELVES-GALADRIEL, GIL-GALAD and CIRDAN.
-
-                    GALADRIEL (V.O.) (CONT'D)
-          Three were given to the Elves, immortal,
-          wisest...fairest of all beings.
 ```
 
-Le premier objectif consiste ainsi à "nettoyer" les scripts afin de ne conserver que les noms des personnages et leurs dialogues. Pour exemple, voici le programme utilisé sur le premier film de la trilogie.
+Le premier objectif consiste ainsi à nettoyer les scripts afin de ne conserver que les noms des personnages et leurs dialogues. Pour exemple, voici le programme utilisé sur le premier film de la trilogie.
 
 ```Python
 # -*- coding: utf-8 -*-
@@ -107,7 +89,7 @@ for line in script:
 file_output.close()
 ```
 
-Le "nettoyage" en tant que tel du script est réalisé avec deux expressions régulières : l'une pour isoler le nom des personnages et la seconde pour isoler les dialogues eux-mêmes.
+Le nettoyage en tant que tel du script est réalisé avec deux expressions régulières : une première permettant d'isoler le nom des personnages et une seconde afin d'isoler les dialogues eux-mêmes.
 
 Le résultat obtenu est de la forme suivante :
 
@@ -128,7 +110,7 @@ GALADRIEL|One Ring to rule them all...
 
 ## Les personnages les plus bavards
 
-Une fois les scripts rendus utilisables, il est alors possible de déterminer quels sont les personnages les plus bavards de la trilogie. Ceci peut notamment être fait en utilisant la fonction `value_counts()` de la bibliothèque `pandas` après avoir concaténé les trois scripts nettoyés.
+Une fois les scripts rendus utilisables, il est alors possible de déterminer quels sont les personnages les plus bavards de la trilogie. J'utilise principalement, ici et dans la suite, la bibliothèque `pandas` pour sa flexibilité, sa lisibilité, son intégration avec `scikit-learn` et `numpy`, son large choix de fonctions et ses performances.
 
 ```Python
 # Import the dialogues text files.
@@ -168,23 +150,23 @@ characters["movie_number"] = np.repeat([1, 2, 3], [len(movie_1),
 top_20 = pd.value_counts(characters["Character"]).head(n=20)
 ```
 
-Le graphique suivant présente les vingt personnages ayant le plus de dialogues sur l'ensemble de la trilogie.
+Le graphique suivant présente les vingt personnages ayant le plus de dialogues sur l'ensemble des trois films (deux versions de ce graphique et des suivants existent : l'une avec `matplotlib` et l'autre avec `seaborn`).
 
 [![talkative](/plots/talkative.png?raw=true)](/plots/talkative.pdf)
 
-Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**.
+Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**. Notons l'absence remarquée de **Sauron**. Le seul personnage maléfique présent étant **Saruman** (et, selon votre interprétation ou sensibilité, **Gollum** ?).
 
-Il est également possible de visualiser la répartition de chacun des trois films dans ce total ce qui permet de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" de personnages comme **Galadriel** ou **Bilbo** au fil de l'histoire.
+Il est également possible de visualiser la répartition de chacun des trois films dans ce total. Ceci permet notamment de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" progressive de personnages comme **Galadriel** ou **Bilbo**.
 
 [![talkative_by_movie](/plots/talkative_by_movie.png?raw=true)](/plots/talkative_by_movie.pdf)
 
 ## *Text mining* et matrice d'adjacence 
 
-Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle choisie ici consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire entre les personnages.
+Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle ici choisie consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire utilisé par les vingt personnages.
 
-Cette technique nécessite notamment d'effectuer une analyse sémantique et de construire une matrice de type termes-documents. Deux bibliothèques en particulier permettent de faciliter grandement ces opérations : le `Natural Language Toolkit` (ou `nltk` de son petit nom) et le module `Feature Extraction` de `Scikit-Learn`.
+Cette technique nécessite d'effectuer une analyse sémantique et de construire ce que l'on appelle une [matrice termes-documents](https://en.wikipedia.org/wiki/Document-term_matrix). En Python, deux bibliothèques en particulier permettent de faciliter grandement ces opérations : le `Natural Language Toolkit` (ou encore `nltk` de son petit nom) et le module `Feature Extraction` de `Scikit-Learn`.
 
-Les opérations de *text mining* consistent essentiellement à convertir l'ensemble des caractères en bas-de-casse, à supprimer des dialogues chiffres et signes de ponctuation, à éliminer les mots vides (ou *stop words*, en anglais) qui correspondent aux mots extrêmement communs et enfin, à supprimer les espaces supplémentaires.
+Les opérations de *text mining* ici effectuées consistent essentiellement à convertir l'ensemble des caractères en bas-de-casse, à supprimer des dialogues chiffres et signes de ponctuation, à éliminer les mots vides (ou *stop words*, en anglais) qui correspondent aux mots extrêmement communs et enfin, à supprimer les espaces supplémentaires.
 
 ```Python
 ## Clean the dialogues.
@@ -222,11 +204,11 @@ doc_term_matrix = pd.DataFrame(doc_term_matrix.toarray(),
 count_terms = doc_term_matrix.sum(axis=0).sort_values(ascending=False)
 ```
 
-Ce format de matrice permet de facilement compter le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente la distribution obtenue.
+Ce format de matrice permet notamment de compter facilement le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente la distribution obtenue.
 
 [![histogram_words](/plots/histogram_words.png?raw=true)](/plots/histogram_words.pdf)
 
-La très grande majorité des mots employés apparaissent moins d'une dizaine de fois. Afin de simplifier l'analyse, ne sont conservés pour la suite que les mots dont la fréquence est supérieur au 9e décile (i.e. 9 occurences).
+La très grande majorité des mots employés apparaissent moins d'une dizaine de fois. Afin de simplifier l'analyse à venir, l'on ne conserve dans la suite que les mots dont la fréquence est supérieur au 9e décile (soit 9 occurences).
 
 ```Python
 # A lot of words are used just a few times.
@@ -246,6 +228,6 @@ frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
 
 [![network_white](/plots/network_white_900.png?raw=true)](/plots/network_white.pdf)
 
-[![network_white_lego](/plots/network_white_lego_900.png?raw=true)](/plots/network_white.pdf)
+[![network_white_lego](/plots/network_white_lego_900.png?raw=true)](/plots/network_white_lego.pdf)
 
 *Header réalisé par [Riku-Rocks.](http://riku-rocks.deviantart.com/art/Lord-of-the-Rings-Wallpaper-98966185)*
