@@ -2,9 +2,9 @@
 
 <br>
 
-Ce projet avait deux objectifs : d'une part, présenter quelques exemples de *text mining* en Python (expressions régulières, matrice documents-termes, etc.) et d'autre part, utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière informative/esthétique/plaisante/rigolote les résultats de l'analyse textuelle préalable.
+Ce projet avait deux objectifs : d'une part, de présenter quelques exemples de *text mining* en Python (expressions régulières, matrice documents-termes, etc.) et d'autre part, d'utiliser `Gephi` et ses nombreuses possibilités pour représenter de manière informative/esthétique/plaisante/rigolote les résultats de l'analyse textuelle préalable.
 
-L'idée principale était de construire un `réseau` (ou `graph`) entre les personnages les plus *bavards* de la trilogie du *Seigneur des Anneaux*. 
+L'idée principale était de construire un `réseau` (ou `graphe`) entre les personnages les plus *bavards* de la trilogie du *Seigneur des Anneaux*. 
 La "recette" utilisée est la suivante :
 * récupérer les scripts des films et les nettoyer pour les rendre utilisables ;
 * identifier les vingt personnages les plus bavards sur l'ensemble de la trilogie (i.e. ceux avec le plus grand nombre de dialogues) ;
@@ -17,7 +17,7 @@ L'article [*Star Wars* de Gaston Sanchez](http://gastonsanchez.com/got-plot/crun
 
 Plusieurs sites se sont fait une spécialité de fournir des scripts de films ([IMSDB](http://www.imsdb.com/), [Simply Scripts](http://www.simplyscripts.com/movie.html), etc.). Cependant, il est rare que ceux-ci soient directement utilisables pour une analyse textuelle quelconque.
 
-Pour exemple, voici les premières lignes de *The Fellowship of the Ring* :
+Pour exemple, le commencement de *The Fellowship of the Ring* :
 
 ```
 BLACK SCREEN
@@ -89,7 +89,7 @@ for line in script:
 file_output.close()
 ```
 
-Le nettoyage en tant que tel du script est réalisé avec deux expressions régulières : une première permettant d'isoler le nom des personnages et une seconde afin d'isoler les dialogues eux-mêmes.
+Le nettoyage en tant que tel du script est réalisé avec deux expressions régulières : une première permettant d'isoler le nom des personnages et une seconde isolant les dialogues eux-mêmes.
 
 Le résultat obtenu est de la forme suivante :
 
@@ -150,11 +150,11 @@ characters["movie_number"] = np.repeat([1, 2, 3], [len(movie_1),
 top_20 = pd.value_counts(characters["Character"]).head(n=20)
 ```
 
-Le graphique suivant présente les vingt personnages ayant le plus de dialogues sur l'ensemble des trois films (deux versions de ce graphique et des suivants existent : l'une avec `matplotlib` et l'autre avec `seaborn`).
+Le graphique suivant présente les vingt personnages ayant le plus de lignes de dialogue sur l'ensemble des trois films.
 
 [![talkative](/plots/talkative_scaled.png?raw=true)](/plots/talkative.pdf)
 
-Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**. Notons l'absence remarquée de **Sauron**. Le seul personnage maléfique présent étant **Saruman** (et, selon votre interprétation ou sensibilité, **Gollum** ?).
+Sans surprise, le personnage le plus bavard est **Gandalf** suivi de près par **Frodo**. Viennent ensuite **Sam** et **Aragorn**. Notons par contre l'absence remarquée de **Sauron**. Le seul personnage maléfique présent étant **Saruman** (et, selon votre interprétation ou sensibilité, **Gollum** ?).
 
 Il est également possible de visualiser la répartition de chacun des trois films dans ce total. Ceci permet notamment de remarquer l'importance grandissante que prennent **Sam** et **Gollum** ou, au contraire, la "disparition" progressive de personnages comme **Galadriel** ou **Bilbo**.
 
@@ -162,11 +162,11 @@ Il est également possible de visualiser la répartition de chacun des trois fil
 
 ## *Text mining* et matrice d'adjacence
 
-Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle ici choisie consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire utilisé par les vingt personnages.
+Une fois identifié les personnages les plus importants (i.e. les plus bavards), l'étape suivante consiste à construire un réseau entre eux. Parmi les différentes méthodes possibles, celle ici choisie consiste à construire une matrice d'adjacence basée sur la similarité de vocabulaire utilisé par ces vingt personnages.
 
 Cette technique nécessite d'effectuer une analyse sémantique et de construire ce que l'on appelle une [matrice termes-documents](https://en.wikipedia.org/wiki/Document-term_matrix). En Python, deux bibliothèques en particulier permettent de faciliter grandement ces opérations : le `Natural Language Toolkit` (ou encore `nltk` de son petit nom) et le module `Feature Extraction` de `Scikit-Learn`.
 
-Les opérations de *text mining* ici effectuées consistent essentiellement à convertir l'ensemble des caractères en bas-de-casse, à supprimer des dialogues chiffres et signes de ponctuation, à éliminer les mots vides (ou *stop words*, en anglais) qui correspondent aux mots extrêmement communs et enfin, à supprimer les espaces supplémentaires.
+Les opérations de *text mining* effectuées consistent essentiellement à convertir l'ensemble des caractères en bas-de-casse, à supprimer des dialogues chiffres et signes de ponctuation, à éliminer les mots vides (ou *stop words*, en anglais) qui correspondent aux mots extrêmement communs et enfin, à supprimer les espaces supplémentaires.
 
 ```Python
 ## Clean the dialogues.
@@ -188,7 +188,7 @@ dials_per_character["Dialogue"] = dials_per_character["Dialogue"]\
 .str.replace("(  +)", " ")
 ```
 
-On peut alors créer une matrice de type termes-documents où les termes sont l'ensemble des mots utilisés et les documents, les personnages.
+On peut alors créer une matrice de type termes-documents où les termes sont les différents mots utilisés et les documents, les personnages.
 
 ```Python
 # Create a document-term matrix.
@@ -204,7 +204,7 @@ doc_term_matrix = pd.DataFrame(doc_term_matrix.toarray(),
 count_terms = doc_term_matrix.sum(axis=0).sort_values(ascending=False)
 ```
 
-Ce format de matrice permet notamment de compter facilement le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente la distribution obtenue.
+Ce format de matrice permet notamment de compter facilement le nombre d'occurences pour chacun des mots employés. L'histogramme suivant présente ainsi la distribution obtenue.
 
 [![histogram_words](/plots/histogram_words_scaled.png?raw=true)](/plots/histogram_words.pdf)
 
@@ -218,20 +218,20 @@ count_terms.quantile(q=0.9)
 frequent_words = count_terms[count_terms >= count_terms.quantile(q=0.9)]
 ```
 
-Voici la nouvelle distribution obtenue suite à cette étape de sélection drastique.
+Voici la nouvelle distribution obtenue suite à cette étape de sélection plutôt drastique.
 
 [![histogram_top_words](/plots/histogram_top_words_scaled.png?raw=true)](/plots/histogram_top_words.pdf)
 
-Si la très grande majorité des mots apparaissent moins d'une vingtaine de fois (preuve d'une certaine richesse de vocabulaire), quelques uns sont par contre utilisés plus de cent fois.
+Si la très grande majorité des mots apparaissent moins d'une vingtaine de fois (preuve d'une certaine richesse de vocabulaire), quelques-uns sont par contre utilisés plus de cent fois.
 
 Les trente mots les plus utilisés sont les suivants :
 
 [![barplot_top_30_words](/plots/barplot_top_30_words_scaled.png?raw=true)](/plots/barplot_top_30_words.pdf)
 
-On y retrouve des noms de personnages comme Frodo (de loin le mot le plus utilisé avec 179 répétitions), Gandalf, Aragorn ou encore Sauron, des verbes (aller, venir, savoir, etc.) et des mots emblématique de l'œuvre de J. R. R. Tolkien comme *anneau*, *unique*, *seigneur*, etc.
+On y retrouve des noms de personnages comme **Frodo** (de loin le mot le plus utilisé avec 179 répétitions), **Gandalf**, **Aragorn** ou encore, dans une moindre mesure, **Sauron**, des verbes (aller, venir, savoir, etc.) mais également des mots emblématiques de l'œuvre de J. R. R. Tolkien comme *anneau*, *unique*, *seigneur*, etc.
 
-L'étape suivante consiste à construire une matrice d'adjacence permettant de quantifier la proximité entre les différents personnages. 
-Le code suivant permet de construire deux matrices d'adjacence : la première est calculée comme le produit matriciel XX' et la seconde est basée sur l'[indice de Jaccard](https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance).
+Il faut à présent construire une matrice d'adjacence qui permettra de quantifier la proximité entre les différents personnages.
+Le code suivant permet de créer deux matrices d'adjacence : la première est calculée comme le produit matriciel XX' (où X est la matrice termes-documents) et la seconde est basée sur l'[indice de Jaccard](https://en.wikipedia.org/wiki/Jaccard_index#Generalized_Jaccard_similarity_and_distance).
 
 ```Python
 ## Adjacency matrix based on the most frequent words.
@@ -264,23 +264,26 @@ adj_matrix_2 = pd.DataFrame(squareform(jaccard_matrix),
                             columns=doc_term_freq.index)
 ```
 
-Une des façons de visualiser un réseau consiste à créer une *heatmap*. La matrice ci-dessous permet de faire quelques observations. Par exemple, les trois personnages les plus bavards (**Gandalf**, **Frodo** et **Sam**) partagent beaucoup de leur vocabulaire en commun, **Aragorn** apparaît à la fois proche de **Gandalf** et d'**Elrond**, **Éowyn** et **Sméagol** sont les deux personnages qui semblent les plus isolés.
+Notons que ces deux matrices d'adjacence aboutissent à un réseau identique (au moins au niveau des liens entre personnages).
+
+Une des façons de visualiser un réseau consiste à créer une *heatmap*. La représentation ci-dessous permet ainsi de faire quelques observations. Par exemple, les trois personnages les plus bavards (**Gandalf**, **Frodo** et **Sam**) partagent beaucoup de leur vocabulaire en commun, **Aragorn** apparaît proche de **Gandalf** et, peut-être de façon plus surprenante, d'**Elrond** tandis que **Sméagol** et **Éowyn** semblent être les deux personnages les plus isolés.
 
 [![heatmap_seaborn](/plots/heatmap_seaborn_scaled.png?raw=true)](/plots/heatmap_seaborn.pdf)
 
-Sur une *heatmap*, ordonner autrement les personnages permet souvent de mettre en évidence des caractéristiques différentes du réseau. Si sur la matrice ci-dessus, les personnages étaient ordonnés du plus bavard au moins bavard, on peut également les ordonner selon leur race : Humains, Hobbits, Elfes, Magiciens et autres (Nain, Ent et **Gollum**/**Sméagol** bien qu'il soit techniquement un hobbit).
+Sur une *heatmap*, ordonner autrement les personnages permet souvent de mettre en évidence des caractéristiques différentes du réseau. 
+Si sur la matrice ci-dessus, les personnages étaient ordonnés du plus bavard au moins bavard, on peut également choisir de les ordonner selon leur race : Humains, Hobbits, Elfes, Magiciens et autres (Nain, Ent et **Gollum**/**Sméagol** bien que ce dernier soit techniquement un hobbit).
 
 [![heatmap_2_seaborn](/plots/heatmap_2_seaborn_scaled.png?raw=true)](/plots/heatmap_2_seaborn.pdf)
 
-Cet ordonnancement différent permet par exemple de voir les liens forts qui peuvent exister entre les Hobbits ou au contraire la faible porximité apparentre entre les Hommes. De même, les liens entre Elfes sont assez distants.
+Cet ordonnancement différent permet ainsi de voir les liens forts qui peuvent exister entre Hobbits ou au contraire la faible proximité apparente entre les Hommes. De même, les liens entre Elfes semblent également assez distants.
 
 ## Visualisation du réseau
 
-La dernière étape de ce projet consiste à visualiser le réseau proprement dit. J'ai choisi d'utiliser `Gephi` bien que les visualisations présentées ci-après aurait pu être réalisées directement avec `igraph` par exemple.
+La dernière étape de ce projet consiste à visualiser le réseau sous forme de graphe. J'ai choisi d'utiliser `Gephi` bien que les visualisations présentées ci-après aurait pu être directement réalisées avec `igraph` par exemple.
 
-Une fois la matrice d'ajacence créée, il faut transformer celle-ci en un objet de type "graphe", c'est-à-dire en un ensemble de nœuds reliés par des arrêtes. Les relations entre personnages étant symétriques, le graphe ainsi créé est dit non orienté.
+Une fois la matrice d'ajacence créée, il faut transformer celle-ci en un objet de type "graphe", c'est-à-dire en un ensemble de nœuds reliés par des arrêtes. Les relations entre personnages étant ici symétriques, le graphe ainsi créé est dit non orienté.
 
-Ayant rencontré quelques soucis de compatibilité entre ma version de Python et `igraph`, cette étape a été réalisée en `R` (voir network.R).
+Ayant rencontré quelques soucis de compatibilité entre ma version de Python et l'implémentation d'`igraph`, cette étape a été réalisée en `R` (voir network.R).
 
 Voici le résultat obtenu avec `Gephi` :
 
