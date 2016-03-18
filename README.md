@@ -298,7 +298,7 @@ J'ai choisi d'attribuer des couleurs aux nœuds en fonction de la race des perso
 
 Les observations que l'on peut faire sont très semblables à celles déjà effectuées. Sans réelle surprise, **Gandalf** se trouve au cœur du réseau et possède des liens très forts avec de nombreux personnages (les membres de la Communauté de l'Anneau). Les Hobbits semblent très proches les uns des autres (et même de **Gollum**) tandis que les liens entre Elfes ou entre Humains sont plus ténus. **Éowyn** et **Faramir** (qui finiront par se marier) sont tous les deux assez éloignés des autres personnages. Tout comme, dans une moindre mesure, **Legolas**.
 
-Après la version sérieuse, voici la version plus "fun" de ce même graphe (le pouvoir combiné de `Gimp`, `Gephi` et `Inkscape`) :
+Après la version sérieuse, voici la version plus "rigolote" de ce même graphe (le pouvoir combiné de `Gimp`, `Gephi` et `Inkscape`) :
 
 [![network_white_lego](/plots/network_white_lego_scaled.png?raw=true)](/plots/network_white_lego.pdf)
 
